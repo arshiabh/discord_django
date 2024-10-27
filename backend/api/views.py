@@ -1,15 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Room
+from .forms import RoomCreation
 
-
-# rooms = [
-#     {'id':1, "name":"frontend"},
-#     {'id':2, "name":"learn back"},
-#     {'id':3, "name":"learn angular"}
-# ]
 
 def home(request):
-    rooms = Room.objects.all()
+    rooms = Room.objects.all().order_by('-updated')
     return render(request, 'api/home.html',{"rooms":rooms})
 
 
@@ -19,3 +14,14 @@ def room(request,pk):
         'room':room
     }
     return render(request, 'api/room.html', context)
+
+
+def createRoom(request):
+    if request.method == 'POST':
+        form = RoomCreation(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = RoomCreation()
+    return render(request, 'api/create_form.html', {'form':form})
