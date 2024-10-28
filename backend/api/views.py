@@ -1,11 +1,20 @@
 from django.shortcuts import render, redirect
-from .models import Room
+from .models import Room, Topic
 from .forms import RoomCreation
+from django.db.models import Q
+
 
 
 def home(request):
-    rooms = Room.objects.all().order_by('-updated')
-    return render(request, 'api/home.html',{"rooms":rooms})
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    rooms = Room.objects.filter(
+        Q(topic__name__icontains=q) |
+        Q(name__icontains=q)
+                                )
+    room_count = rooms.count()
+    topics = Topic.objects.all()
+    return render(request, 'api/home.html',{"rooms":rooms,'topics':topics,'room_count':room_count})
+
 
 
 def room(request,pk):
@@ -14,6 +23,7 @@ def room(request,pk):
         'room':room
     }
     return render(request, 'api/room.html', context)
+
 
 
 def createRoom(request):
