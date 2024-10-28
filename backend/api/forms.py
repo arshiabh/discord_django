@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from .models import Room
 from django import forms
 
-
 class RoomCreation(ModelForm):
     
     class Meta:

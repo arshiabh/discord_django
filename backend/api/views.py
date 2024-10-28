@@ -25,3 +25,29 @@ def createRoom(request):
     else:
         form = RoomCreation()
     return render(request, 'api/create_form.html', {'form':form})
+
+
+
+def UpdateRoom(request, pk):
+    room = Room.objects.get(id=pk)
+    if request.method == 'POST':
+        form = RoomCreation(request.POST, instance=room)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = RoomCreation(instance=room)
+
+    context = {
+        'form': form
+    }
+    return render(request, 'api/create_form.html', context)
+
+
+
+def DeleteRoom(request, pk):
+    room = Room.objects.get(id=pk)
+    if request.method == 'POST':
+        room.delete()
+        return redirect('index') 
+    return render(request, 'api/delete.html', {"obj":room})
