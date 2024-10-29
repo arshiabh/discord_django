@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Room, Topic
+from .models import Room, Topic, Massage
 from .forms import RoomCreation
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.contrib.auth import login,authenticate, logout 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm 
+
+
 
 
 def LoginPage(request):
@@ -40,6 +42,7 @@ def registerPage(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
+            #commit mibandim ye user misazim az rosh ke usernamesh lower konim
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
@@ -74,9 +77,22 @@ def home(request):
 
 
 def room(request,pk):
-    room = Room.objects.get(id=pk)            
+    room = Room.objects.get(id=pk)
+    messages = room.massage_set.all().order_by('-created')
+
+    if request.method == 'POST':
+        newm = Massage.objects.create(
+            user = request.user,
+            room = room,
+            #get toe templates ke hast sakhtim
+            body = request.POST.get('body')
+        )
+        return redirect('room', pk=room.id)
+
+
     context = {
-        'room':room
+        'room':room,
+        "messagess":messages
     }
     return render(request, 'api/room.html', context)
 
