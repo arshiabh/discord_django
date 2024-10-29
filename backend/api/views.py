@@ -4,13 +4,19 @@ from .forms import RoomCreation
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import login,authenticate
+from django.contrib.auth import login,authenticate, logout 
+from django.contrib.auth.decorators import login_required
 
 
 
 def LoginPage(request):
+
+    #if already is , redirect it 
+    if request.user.is_authenticated:
+        return redirect('index')
+
     if request.method == 'POST':
-        username = request.POST.get('name')
+        username = request.POST.get('username')
         password = request.POST.get('password')
         try:
             user = User.objects.get(username=username)
@@ -26,6 +32,12 @@ def LoginPage(request):
 
     context = {}
     return render(request, 'api/login_register.html', context)
+
+
+
+def LogoutPage(request):
+    logout(request)
+    return redirect('index')
 
 
 
@@ -51,6 +63,7 @@ def room(request,pk):
 
 
 
+@login_required(login_url='login')
 def createRoom(request):
     if request.method == 'POST':
         form = RoomCreation(request.POST)
@@ -63,6 +76,7 @@ def createRoom(request):
 
 
 
+@login_required(login_url='login')
 def UpdateRoom(request, pk):
     room = Room.objects.get(id=pk)
     if request.method == 'POST':
@@ -80,6 +94,7 @@ def UpdateRoom(request, pk):
 
 
 
+@login_required(login_url='login')
 def DeleteRoom(request, pk):
     room = Room.objects.get(id=pk)
     if request.method == 'POST':
