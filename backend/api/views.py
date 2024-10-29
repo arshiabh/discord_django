@@ -2,6 +2,31 @@ from django.shortcuts import render, redirect
 from .models import Room, Topic
 from .forms import RoomCreation
 from django.db.models import Q
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import login,authenticate
+
+
+
+def LoginPage(request):
+    if request.method == 'POST':
+        username = request.POST.get('name')
+        password = request.POST.get('password')
+        try:
+            user = User.objects.get(username=username)
+        except:
+            messages.error(request, 'user does not exits!')
+        
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, 'username or password does not exist!')
+
+    context = {}
+    return render(request, 'api/login_register.html', context)
+
 
 
 
