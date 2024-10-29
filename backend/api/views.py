@@ -6,17 +6,17 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login,authenticate, logout 
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.forms import UserCreationForm 
 
 
 def LoginPage(request):
-
+    page = 'login'
     #if already is , redirect it 
     if request.user.is_authenticated:
         return redirect('index')
 
     if request.method == 'POST':
-        username = request.POST.get('username')
+        username = request.POST.get('username').lower()
         password = request.POST.get('password')
         try:
             user = User.objects.get(username=username)
@@ -30,7 +30,26 @@ def LoginPage(request):
         else:
             messages.error(request, 'username or password does not exist!')
 
-    context = {}
+    context = {'page':page}
+    return render(request, 'api/login_register.html', context)
+
+
+
+def registerPage(request):
+    page = 'register'
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, 'an error occured during register')
+    else:
+        form = UserCreationForm()
+    context = {'page':page,'form':form}
     return render(request, 'api/login_register.html', context)
 
 
