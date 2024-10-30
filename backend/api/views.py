@@ -63,18 +63,16 @@ def LogoutPage(request):
 
 
 
-
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
     rooms = Room.objects.filter(
-        Q(topic__name__icontains=q) |
+        Q(topic__name__icontains=q)|
         Q(name__icontains=q)
-                                )
+                                ).order_by('-created')
     
     room_count = rooms.count()
     topics = Topic.objects.all()
     room_messeges = Massage.objects.filter(Q(room__topic__name__icontains=q)).order_by('-updated')
-
 
     context = {
         "rooms":rooms,'topics':topics,'room_count':room_count,'room_messeges':room_messeges
@@ -99,7 +97,6 @@ def room(request,pk):
         room.participants.add(request.user)
         return redirect('room', pk=room.id)
 
-
     context = {
         'room':room,
         "messagess":messages,
@@ -116,7 +113,6 @@ def DeleteMessege(request, pk):
         messege.delete()
         return redirect('index') 
     return render(request, 'api/delete.html', {"obj":messege})
-
 
 
 

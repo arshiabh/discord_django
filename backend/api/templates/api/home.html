@@ -15,19 +15,7 @@
 
         <div>
 
-            <h3>Browse Topic</h3>
-            <hr>
-
-                <div>
-                    <a href="{% url 'index' %}">All</a>
-                </div>
-
-            {% for topic in topics %}
-                <div>
-                    {# onclick topic name to url migir#}
-                    <a href="{% url 'index' %}?q={{topic.name}}">{{ topic.name }}</a>
-                </div>
-            {% endfor %}
+            {% include "api/topic_component.html" %}
 
         </div>
 
@@ -36,36 +24,12 @@
             <h5>{{ room_count }} Room Available! </h5>
             <a href="{% url 'create-room' %}">Create Room</a>
             <hr>
-            {% for room in rooms %}
-            <div>
-                {% if request.user == room.host %}
-                <a href="{% url 'update-room' room.id %}">Edit</a>
-                <a href="{% url 'delete-room' room.id %}">Delete</a>
-                {% endif %}
-                <span>@{{ room.host.username }}</span>
-                <h2>{{ room.id }} -- <a href="{% url 'room' room.id %}">{{ room.name }}</a></h2>
-                <small>{{room.topic.name }}</small>
-                <hr>
-            </div>
-            {% endfor %}
+            {% include "api/feed_component.html" %}
         </div>
 
 
         <div>
-        
-            <h3>Recent Activity</h3>
-            <hr>
-            {% for room_messege in room_messeges %}
-                <div>
-                
-                    <small>@{{ room_messege.user}} {{ room_messege.created |timesince }}</small>
-                    <small>reply to "{{ room_messege.room }}"</small>
-                    <p>{{ room_messege.body}}</p>
-                    <hr>
-
-                </div>
-            {% endfor %}
-
+            {% include "api/activity_component.html" %}
         </div>
 
 
