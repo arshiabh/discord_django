@@ -79,6 +79,7 @@ def home(request):
 def room(request,pk):
     room = Room.objects.get(id=pk)
     messages = room.massage_set.all().order_by('-created')
+    participants = room.participants.all()
 
     if request.method == 'POST':
         newm = Massage.objects.create(
@@ -87,14 +88,27 @@ def room(request,pk):
             #get toe templates ke hast sakhtim
             body = request.POST.get('body')
         )
+        room.participants.add(request.user)
         return redirect('room', pk=room.id)
 
 
     context = {
         'room':room,
-        "messagess":messages
+        "messagess":messages,
+        'participants':participants
     }
     return render(request, 'api/room.html', context)
+
+
+
+@login_required(login_url='login')
+def DeleteMessege(request, pk):
+    messege = Massage.objects.get(id=pk)
+    if request.method == 'POST':
+        messege.delete()
+        return redirect('index') 
+    return render(request, 'api/delete.html', {"obj":messege})
+
 
 
 
