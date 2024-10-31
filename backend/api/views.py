@@ -106,6 +106,18 @@ def room(request,pk):
 
 
 
+def Profile(request, pk):
+    user = User.objects.get(id=pk)
+
+
+    context ={
+        "user":user
+    }
+    return render(request, 'api/profile.html', context)
+
+
+
+
 @login_required(login_url='login')
 def DeleteMessege(request, pk):
     messege = Massage.objects.get(id=pk)
