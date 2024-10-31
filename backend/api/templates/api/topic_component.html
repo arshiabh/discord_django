@@ -1,13 +1,13 @@
 <h3>Browse Topic</h3>
 <hr>
 
-    <div>
-        <a href="{% url 'index' %}">All</a>
-    </div>
+<div>
+    <a href="{% url 'index' %}">All</a>
+</div>
 
 {% for topic in topics %}
-    <div>
-        {# onclick topic name to url migir#}
-        <a href="{% url 'index' %}?q={{topic.name}}">{{ topic.name }}</a>
-    </div>
+<div>
+    {# onclick topic name to url migir#}
+    <a href="{% url 'index' %}?q={{topic.name}}">{{ topic.name }}</a>
+</div>
 {% endfor %}

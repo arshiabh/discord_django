@@ -108,10 +108,15 @@ def room(request,pk):
 
 def Profile(request, pk):
     user = User.objects.get(id=pk)
-
+    rooms = user.room_set.all()
+    room_messeges = user.massage_set.all()
+    topics = Topic.objects.all()
 
     context ={
-        "user":user
+        "user":user,
+        "rooms":rooms,
+        "room_messeges":room_messeges,
+        'topics':topics
     }
     return render(request, 'api/profile.html', context)
 
