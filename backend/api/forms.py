@@ -7,4 +7,7 @@ class RoomCreation(ModelForm):
     
     class Meta:
         model = Room
-        fields = '__all__' 
+        fields = '__all__'
+        #exclude mikonim chon to form nayad host yeki dg entkhb konim
+        #view handelesh karidim ke host = user gozashtim
+        exclude = ['host','participants'] 

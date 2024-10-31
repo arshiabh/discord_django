@@ -138,7 +138,10 @@ def createRoom(request):
     if request.method == 'POST':
         form = RoomCreation(request.POST)
         if form.is_valid():
-            form.save()
+            #create instance
+            room = form.save(commit=False)
+            room.host = request.user
+            room.save()
             return redirect('index')
     else:
         form = RoomCreation()
