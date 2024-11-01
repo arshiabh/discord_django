@@ -138,33 +138,45 @@ def DeleteMessege(request, pk):
 
 @login_required(login_url='login')
 def createRoom(request):
+    topics = Topic.objects.all()
     if request.method == 'POST':
-        form = RoomCreation(request.POST)
-        if form.is_valid():
-            #create instance
-            room = form.save(commit=False)
-            room.host = request.user
-            room.save()
-            return redirect('index')
+        topic_name = request.POST.get('topic')
+        topic, created = Topic.objects.get_or_create(name=topic_name)
+
+        Room.objects.create(
+            name = request.POST.get('name'),
+            host = request.user,
+            topic = topic,
+            description = request.POST.get('description') 
+        )
+
+        return redirect('index')
     else:
         form = RoomCreation()
-    return render(request, 'api/create_form.html', {'form':form})
+    return render(request, 'api/create_form.html', {'form':form, 'topics':topics})
 
 
 
 @login_required(login_url='login')
 def UpdateRoom(request, pk):
     room = Room.objects.get(id=pk)
+    topics = Topic.objects.all()
     if request.method == 'POST':
-        form = RoomCreation(request.POST, instance=room)
-        if form.is_valid():
-            form.save()
-            return redirect('index')
+        topic_name = request.POST.get('topic')
+        topic , created = Topic.objects.get_or_create(name=topic_name)
+        room.name = request.POST.get('name')
+        room.topic = topic
+        room.description = request.POST.get('description')
+        room.save()
+
+        return redirect('index')
     else:
         form = RoomCreation(instance=room)
 
     context = {
-        'form': form
+        'form': form,
+        'topics': topics,
+        'room': room
     }
     return render(request, 'api/create_form.html', context)
 
