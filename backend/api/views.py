@@ -73,9 +73,12 @@ def home(request):
     room_count = rooms.count()
     topics = Topic.objects.all()
     room_messeges = Massage.objects.filter(Q(room__topic__name__icontains=q)).order_by('-updated')
+   
+
 
     context = {
-        "rooms":rooms,'topics':topics,'room_count':room_count,'room_messeges':room_messeges
+        "rooms":rooms,'topics':topics,'room_count':room_count,'room_messeges':room_messeges,
+    
     }
 
     return render(request, 'api/index.html',context)

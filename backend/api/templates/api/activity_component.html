@@ -1,15 +1,46 @@
-<h3>Recent Activity</h3>
-<hr>
-{% for room_messege in room_messeges %}
-    <div>
-    
-        <small><a href="{% url 'profile' room_messege.user.id %}">@{{ room_messege.user}}</a> {{ room_messege.created |timesince }}</small>
-        <small>reply to "{{ room_messege.room }}"</small>
-        <p>{{ room_messege.body}}</p>
-        {% if request.user == room_messege.user  %}
-            <a href="{% url 'delete-messege' room_messege.id %}">Delete</a>
-        {% endif %}
-        <hr>
-
+<div class="activities">
+    <div class="activities__header">
+    <h2>Recent Activities</h2>
     </div>
-{% endfor %}
+    {% for room_messege in room_messeges %}
+    
+    <div class="activities__box">
+    <div class="activities__boxHeader roomListRoom__header">
+        <a href="{% url 'profile' room_messege.user.id %}" class="roomListRoom__author">
+        <div class="avatar avatar--small">
+            <img src="https://randomuser.me/api/portraits/women/11.jpg" />
+        </div>
+        <p>
+            @{{ room_messege.user.username }}
+            <span>{{ room_messege.created|timesince }}</span>
+        </p>
+        </a>
+        <div class="roomListRoom__actions">
+        {% if request.user == room_messege.user %}
+        <a href="{% url 'delete-messege' room_messege.id %}">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+            <title>remove</title>
+            <path
+                d="M27.314 6.019l-1.333-1.333-9.98 9.981-9.981-9.981-1.333 1.333 9.981 9.981-9.981 9.98 1.333 1.333 9.981-9.98 9.98 9.98 1.333-1.333-9.98-9.98 9.98-9.981z"
+            ></path>
+            </svg>
+        </a>
+        {% endif %}
+        </div>
+    </div>
+    <div class="activities__boxContent">
+        <p>replied to post “<a href="{% url 'room' room_messege.room.id %}">{{room_messege.room.name }}</a>”</p>
+        <div class="activities__boxRoomContent">
+        {{ room_messege.body}}
+        </div>
+    </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+
+
+
+
+
