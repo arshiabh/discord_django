@@ -78,7 +78,7 @@ def home(request):
         "rooms":rooms,'topics':topics,'room_count':room_count,'room_messeges':room_messeges
     }
 
-    return render(request, 'api/home.html',context)
+    return render(request, 'api/index.html',context)
 
 
 
