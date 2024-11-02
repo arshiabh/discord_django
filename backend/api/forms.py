@@ -11,3 +11,11 @@ class RoomCreation(ModelForm):
         #exclude mikonim chon to form nayad host yeki dg entkhb konim
         #view handelesh karidim ke host = user gozashtim
         exclude = ['host','participants'] 
+
+
+class UserForm(ModelForm):
+
+    class Meta:
+        model = User
+
+        fields = ['username','email']

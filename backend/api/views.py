@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Room, Topic, Massage
-from .forms import RoomCreation
+from .forms import RoomCreation, UserForm
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -193,13 +193,16 @@ def DeleteRoom(request, pk):
 
 login_required(login_url='login')
 def updateUser(request):
-
+    user = request.user
     if request.method == "POST":
-        user = request.user.username
-        new = User.objects.get(username=user)
-        new.username = request.POST.get('')
+        form = UserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile', pk= user.id)
+    else:
+        form = UserForm(instance=user)
 
     context = {
-        
+        'form': form
     }
     return render(request, "api/update_user.html", context)
