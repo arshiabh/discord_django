@@ -10,7 +10,6 @@ from django.contrib.auth.forms import UserCreationForm
 
 
 
-
 def LoginPage(request):
     page = 'login'
     #if already is , redirect it 
@@ -84,7 +83,6 @@ def home(request):
     return render(request, 'api/index.html',context)
 
 
-
 def room(request,pk):
     room = Room.objects.get(id=pk)
     messages = room.massage_set.all().order_by('-created')
@@ -115,7 +113,7 @@ def Profile(request, pk):
     room_messeges = user.massage_set.all()
     topics = Topic.objects.all()
 
-    context ={
+    context = {
         "user":user,
         "rooms":rooms,
         "room_messeges":room_messeges,
@@ -189,3 +187,19 @@ def DeleteRoom(request, pk):
         room.delete()
         return redirect('index') 
     return render(request, 'api/delete.html', {"obj":room})
+
+
+
+
+login_required(login_url='login')
+def updateUser(request):
+
+    if request.method == "POST":
+        user = request.user.username
+        new = User.objects.get(username=user)
+        new.username = request.POST.get('')
+
+    context = {
+        
+    }
+    return render(request, "api/update_user.html", context)
