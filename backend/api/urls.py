@@ -13,6 +13,7 @@ urlpatterns = [
     path('profile/<str:pk>/', views.Profile, name='profile'),
     path('update-user/', views.updateUser, name='update-user'),
 
+    path('topics/', views.topics, name = 'topics'),
 
     path('create-room/', views.createRoom, name='create-room'),
     path('update-room/<str:pk>', views.UpdateRoom, name='update-room'),

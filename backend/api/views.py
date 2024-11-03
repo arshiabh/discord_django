@@ -70,7 +70,7 @@ def home(request):
                                 ).order_by('-created')
     
     room_count = rooms.count()
-    topics = Topic.objects.all()
+    topics = Topic.objects.all()[0:5]
     room_messeges = Massage.objects.filter(Q(room__topic__name__icontains=q)).order_by('-updated')
    
 
@@ -206,3 +206,15 @@ def updateUser(request):
         'form': form
     }
     return render(request, "api/update_user.html", context)
+
+
+
+
+def topics(request):
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    topics = Topic.objects.filter(name__icontains=q)
+
+    context = {
+        'topics': topics
+    }
+    return render(request, 'api/topics.html', context)
