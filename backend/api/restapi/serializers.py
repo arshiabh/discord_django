@@ -1,7 +1,8 @@
-from django.urls import path
-from . import views
+from rest_framework.serializers import ModelSerializer
+from api.models import Room
 
 
-urlpatterns = [
-    path('', views.getRoutes)
-]
+class RoomSerializer(ModelSerializer):
+    class Meta:
+        model = Room
+        fields = '__all__'
